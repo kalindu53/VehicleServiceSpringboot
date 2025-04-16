@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Admin Management</h2>
+
+    <form id="adminForm" class="mb-4">
+        <div class="row g-3">
+            <div class="col-md-3">
+                <input type="text" class="form-control" id="adminId" placeholder="Admin ID" required>
+            </div>
+            <div class="col-md-3">
+                <input type="text" class="form-control" id="name" placeholder="Name" required>
+            </div>
+            <div class="col-md-3">
+                <input type="email" class="form-control" id="email" placeholder="Email" required>
+            </div>
+            <div class="col-md-3">
+                <input type="password" class="form-control" id="password" placeholder="Password" required>
+            </div>
+        </div>
+        <div class="mt-3 d-flex gap-2">
+            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="button" class="btn btn-warning" onclick="updateAdmin()">Update</button>
+            <button type="button" class="btn btn-danger" onclick="deleteAdmin()">Delete</button>
+            <button type="reset" class="btn btn-secondary">Clear</button>
+        </div>
+    </form>
+
+    <table class="table table-bordered table-hover bg-white" id="adminTable">
+        <thead class="table-dark">
+        <tr>
+            <th>Admin ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Password</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Admin data will be loaded here -->
+        </tbody>
+    </table>
+</div>
+
+<script>
+    const apiUrl = "http://localhost:8080/api/admins";
+
+    function loadAdmins() {
+        fetch(apiUrl)
+            .then(res => res.json())
+            .then(data => {
+                const tableBody = document.querySelector("#adminTable tbody");
+                tableBody.innerHTML = "";
+                data.forEach(admin => {
+                    const row = `<tr onclick="fillForm('${admin.adminId}', '${admin.name}', '${admin.email}', '${admin.password}')">
+                        <td>${admin.adminId}</td>
+                        <td>${admin.name}</td>
+                        <td>${admin.email}</td>
+                        <td>${admin.password}</td>
+                    </tr>`;
+                    tableBody.innerHTML += row;
+                });
+            });
+    }
+
+    function fillForm(id, name, email, password) {
+        document.getElementById("adminId").value = id;
+        document.getElementById("name").value = name;
+        document.getElementById("email").value = email;
+        document.getElementById("password").value = password;
+    }
+
+    document.getElementById("adminForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+        const admin = {
+            adminId: document.getElementById("adminId").value,
+            name: document.getElementById("name").value,
+            email: document.getElementById("email").value,
+            password: document.getElementById("password").value
+        };
+
+        fetch(apiUrl, {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(admin)
+        }).then(() => {
+            loadAdmins();
+            this.reset();
+        });
+    });
+
+    function updateAdmin() {
+        const admin = {
+            adminId: document.getElementById("adminId").value,
+            name: document.getElementById("name").value,
+            email: document.getElementById("email").value,
+            password: document.getElementById("password").value
+        };
+
+        fetch(apiUrl, {
+            method: "PUT",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(admin)
+        }).then(() => {
+            loadAdmins();
+            document.getElementById("adminForm").reset();
+        });
+    }
+
+    function deleteAdmin() {
+        const id = document.getElementById("adminId").value;
+        if (!id) return alert("Please enter Admin ID to delete");
+
+        fetch(`${apiUrl}/${id}`, {
+            method: "DELETE"
+        }).then(() => {
+            loadAdmins();
+            document.getElementById("adminForm").reset();
+        });
+    }
+
+    window.onload = loadAdmins;
+</script>
+</body>
+</html>

@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Worker Management</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --background: #f9fafb;
+            --card-bg: #ffffff;
+            --text: #1f2937;
+            --text-light: #6b7280;
+            --border: #e5e7eb;
+            --danger: #ef4444;
+            --danger-hover: #dc2626;
+            --success: #10b981;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            color: var(--text);
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            font-size: 1.5rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group label {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+            font-size: 0.875rem;
+        }
+
+        input {
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border 0.2s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+        }
+
+        .button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .button-danger {
+            background-color: var(--danger);
+        }
+
+        .button-danger:hover {
+            background-color: var(--danger-hover);
+        }
+
+        .button-sm {
+            font-size: 0.875rem;
+            padding: 0.5rem 1rem;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 1rem;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background-color: #f3f4f6;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: var(--text);
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text);
+        }
+
+        .status-badge {
+            background-color: #e0f2fe;
+            color: #0369a1;
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            display: inline-block;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-light);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .header h2 {
+            margin-bottom: 0;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h2>Worker Management</h2>
+    </div>
+
+    <div class="card">
+        <h2>Add New Worker</h2>
+        <div class="form-grid">
+            <div class="input-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" placeholder="Enter full name">
+            </div>
+            <div class="input-group">
+                <label for="role">Role</label>
+                <input type="text" id="role" placeholder="Enter job role">
+            </div>
+            <div class="input-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" placeholder="Enter email address">
+            </div>
+        </div>
+        <div class="form-actions">
+            <button class="button" onclick="saveWorker()">Add Worker</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Worker List</h2>
+        <div class="table-container">
+            <table id="workerTable">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Role</th>
+                    <th>Email</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody id="workerTableBody">
+                <!-- Data will be loaded here -->
+                </tbody>
+            </table>
+            <div id="emptyState" class="empty-state" style="display:none;">
+                No workers found. Add a new worker to get started.
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const API_URL = 'http://localhost:8080/api/workers';
+
+    function loadWorkers() {
+        fetch(API_URL)
+            .then(res => res.json())
+            .then(data => {
+                const tbody = document.getElementById('workerTableBody');
+                const emptyState = document.getElementById('emptyState');
+
+                tbody.innerHTML = '';
+
+                if (data.length === 0) {
+                    emptyState.style.display = 'block';
+                } else {
+                    emptyState.style.display = 'none';
+
+                    data.forEach(worker => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                                <td>${worker.workerId}</td>
+                                <td>${worker.name}</td>
+                                <td>${worker.role}</td>
+                                <td>${worker.email}</td>
+                                <td>
+                                    <button class="button button-danger button-sm" onclick="deleteWorker(${worker.workerId})">Delete</button>
+                                </td>
+                            `;
+                        tbody.appendChild(row);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error loading workers:', error);
+                alert('Failed to load workers. Please try again.');
+            });
+    }
+
+    function saveWorker() {
+        const name = document.getElementById('name').value.trim();
+        const role = document.getElementById('role').value.trim();
+        const email = document.getElementById('email').value.trim();
+
+        if (!name || !role || !email) {
+            alert('Please fill in all fields');
+            return;
+        }
+
+        fetch(API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, role, email })
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(() => {
+                loadWorkers();
+                document.getElementById('name').value = '';
+                document.getElementById('role').value = '';
+                document.getElementById('email').value = '';
+            })
+            .catch(error => {
+                console.error('Error saving worker:', error);
+                alert('Failed to add worker. Please try again.');
+            });
+    }
+
+    function deleteWorker(id) {
+        if (confirm('Are you sure you want to delete this worker?')) {
+            fetch(`${API_URL}/${id}`, { method: 'DELETE' })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    loadWorkers();
+                })
+                .catch(error => {
+                    console.error('Error deleting worker:', error);
+                    alert('Failed to delete worker. Please try again.');
+                });
+        }
+    }
+
+    // Load data on page load
+    window.onload = loadWorkers;
+</script>
+</body>
+</html>
