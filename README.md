@@ -32,9 +32,7 @@ This is a web-based **Vehicle Service Management System** designed to streamline
 
 /vehicle-service-management-system │ ├── index.html # Customer login page ├── CustomerSignUp.html # Customer registration page ├── CustomerDashboard.html # Logged-in dashboard ├── assets/ # Images and icons ├── style.css # Custom styling (optional) ├── README.md # Project documentation └── ...
 
-yaml
-Copy
-Edit
+![image alt](https://github.com/kalindu53/VehicleServiceSpringboot/blob/6cd15e7b652de5c9aaa5637e78af37b9cbd66d3b/Screenshot%202025-04-16%20204551.png)
 
 ---
 
@@ -44,9 +42,6 @@ Login form sends a POST request to:
 
 POST http://localhost:8080/api/v1/customers/CustomerLogin
 
-css
-Copy
-Edit
 
 ### Example Request Body:
 
