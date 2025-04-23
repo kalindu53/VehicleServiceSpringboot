@@ -33,6 +33,11 @@ This is a web-based **Vehicle Service Management System** designed to streamline
 /vehicle-service-management-system │ ├── index.html # Customer login page ├── CustomerSignUp.html # Customer registration page ├── CustomerDashboard.html # Logged-in dashboard ├── assets/ # Images and icons ├── style.css # Custom styling (optional) ├── README.md # Project documentation └── ...
 
 ![image alt](https://github.com/kalindu53/VehicleServiceSpringboot/blob/main/Screenshot%202025-04-23%20101602.png?raw=true)
+![image alt](https://github.com/kalindu53/VehicleServiceSpringboot/blob/main/Screenshot%202025-04-23%20101652.png?raw=true
+)
+![image alt](https://github.com/kalindu53/VehicleServiceSpringboot/blob/main/Screenshot%202025-04-16%20204640.png?raw=true
+)
+![image alt](https://github.com/kalindu53/VehicleServiceSpringboot/blob/main/Screenshot%202025-04-23%20102234.png?raw=true)
 
 ---
 
